@@ -40,7 +40,7 @@ const Header = () => {
 export default Header;
 
 // 以下styled-components
-const Nav = styled.nav`
+const Nav = styled.header`
   height: 70px;
   background: #090b13;
   display: flex;

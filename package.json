@@ -12,11 +12,14 @@
     "@babel/parser": "^7.20.0",
     "@babel/types": "^7.20.0",
     "@reduxjs/toolkit": "^1.9.0",
+    "@types/react-slick": "^0.23.10",
     "@types/styled-components": "^5.1.26",
     "esbuild": "^0.15.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
