@@ -1,7 +1,18 @@
+import { signInWithPopup } from '@firebase/auth';
 import React from 'react';
 import styled from 'styled-components';
+import { auth, provider } from '../firebase';
 
 const Header = () => {
+
+  const handleAuth = () => {
+    signInWithPopup(auth, provider).then((result) => {
+      console.log(result);
+    }).catch((err) => {
+      alert(err.message);
+    });
+  };
+
   return (
     <Nav>
       <Logo src="/images/logo.svg" alt="メインロゴ" />
@@ -32,7 +43,7 @@ const Header = () => {
         </a>
 
       </NavMenu>
-      <UserImg src="images/group-icon.png" alt="ユーザー画像" />
+      <UserImg onClick={handleAuth} src="images/group-icon.png" alt="ユーザー画像" />
     </Nav>
   )
 }
