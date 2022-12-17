@@ -1,55 +1,99 @@
-import { signInWithPopup } from '@firebase/auth';
-import React from 'react';
+import { signInWithPopup, signOut, UserCredential, User } from '@firebase/auth';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { auth, provider } from '../firebase';
-import { selectUserEmail, selectUserName, selectUserPhoto } from '../reducks/user/userSlice';
+import { selectUserName, selectUserPhoto, setSignOutState, setUsersLoginDetails } from '../reducks/user/userSlice';
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+
   const dispatch = useDispatch();
+  const navigation = useNavigate();
   const username = useSelector(selectUserName);
-  const userEmail = useSelector(selectUserEmail);
   const userPhoto = useSelector(selectUserPhoto);
 
-  const handleAuth = () => {
-    signInWithPopup(auth, provider).then((result) => {
-      console.log(result);
+  useEffect(() => {
+    auth.onAuthStateChanged((user: User | null) => {
+      if (user) {
+        setUser(user);
+        navigation("/");
+      };
+    });
+  }, [username]);
+
+  const signIn = () => {
+    signInWithPopup(auth, provider).then((result: UserCredential) => {
+      setUser(result.user);
     }).catch((err) => {
-      alert(err.message);
+      alert('ログインに失敗しました。');
     });
   };
+
+  const signout = () => {
+    signOut(auth).then(() => {
+      dispatch(setSignOutState({}));
+      navigation("/login");
+    }).catch((err) => {
+      alert('ログアウトに失敗しました。');
+    })
+  };
+
+  const setUser = (user: User) => {
+    dispatch(
+      setUsersLoginDetails({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      })
+    )
+  }
 
   return (
     <Nav>
       <Logo src="/images/logo.svg" alt="メインロゴ" />
-      <NavMenu>
-        <a href="">
-          <img src="/images/home-icon.svg" alt="ホームアイコン" />
-          <span>ホーム</span>
-        </a>
-        <a href="">
-          <img src="images/search-icon.svg" alt="検索アイコン" />
-          <span>検索</span>
-        </a>
-        <a href="">
-          <img src="images/watchlist-icon.svg" alt="お気に入りアイコン" />
-          <span>お気に入り</span>
-        </a>
-        <a href="">
-          <img src="images/original-icon.svg" alt="オリジナルアイコン" />
-          <span>オリジナル</span>
-        </a>
-        <a href="">
-          <img src="images/movie-icon.svg" alt="映画アイコン" />
-          <span>映画</span>
-        </a>
-        <a href="">
-          <img src="images/series-icon.svg" alt="シリーズアイコン" />
-          <span>シリーズ</span>
-        </a>
-
-      </NavMenu>
-      <UserImg onClick={handleAuth} src="images/group-icon.png" alt="ユーザー画像" />
+      {
+        !username ? (
+          <LoginContainer>
+            <Login onClick={signIn}>ログイン</Login>
+          </LoginContainer>
+        ) : (
+          <>
+            <NavMenu>
+              <a href="">
+                <img src="/images/home-icon.svg" alt="ホームアイコン" />
+                <span>ホーム</span>
+              </a>
+              <a href="">
+                <img src="images/search-icon.svg" alt="検索アイコン" />
+                <span>検索</span>
+              </a>
+              <a href="">
+                <img src="images/watchlist-icon.svg" alt="お気に入りアイコン" />
+                <span>お気に入り</span>
+              </a>
+              <a href="">
+                <img src="images/original-icon.svg" alt="オリジナルアイコン" />
+                <span>オリジナル</span>
+              </a>
+              <a href="">
+                <img src="images/movie-icon.svg" alt="映画アイコン" />
+                <span>映画</span>
+              </a>
+              <a href="">
+                <img src="images/series-icon.svg" alt="シリーズアイコン" />
+                <span>シリーズ</span>
+              </a>
+            </NavMenu> 
+            <SignOut>
+              <UserImg src={userPhoto!} alt={username} />
+              <DropDown>
+                <span onClick={signout} >ログアウト</span>
+              </DropDown>
+            </SignOut>
+          </>
+        )
+      }
     </Nav>
   )
 }
@@ -68,6 +112,29 @@ const Nav = styled.header`
 const Logo = styled.img`
   width: 80px;
 
+`;
+
+const LoginContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+`;
+
+const Login = styled.div`
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border: 1px solid #f9f9f9;
+  border-radius: 4px;
+  transition: all 0.2s ease 0s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f9f9f9;
+    color: #000;
+    border-color: transparent;
+  }
 `;
 
 const NavMenu = styled.div`
@@ -122,4 +189,37 @@ const UserImg = styled.img`
   height: 48px;
   border-radius: 50%;
   cursor: pointer;
-`
+`;
+
+const DropDown = styled.div`
+  position: absolute;
+  top: 48px;
+  right: 0px;
+  background: rgb(19, 19, 19);
+  border: 1px solid rgba(151, 151, 151, 0.34);
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 / 50%) 0px 0px 18px 0px;
+  padding: 10px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  width: 100px;
+  opacity: 0;
+`;
+
+const SignOut = styled.div`
+  position: relative;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+      z-index: 1;
+    }
+  }
+`;

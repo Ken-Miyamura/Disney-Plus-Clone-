@@ -6,13 +6,17 @@ interface CounterState {
   photo: string | null
 }
 
+interface RootState {
+  user: CounterState;
+}
+
 const initialState: CounterState = {
   name: '',
   email: '',
   photo: ''
 };
 
-// Sliceとは、
+// Sliceとは、reducerとactionを組み合わせたもの
 const userSlice: Slice<CounterState> = createSlice({
   name: 'user',
   initialState,
@@ -34,9 +38,7 @@ const userSlice: Slice<CounterState> = createSlice({
 
 export const { setUsersLoginDetails, setSignOutState } = userSlice.actions;
 export default userSlice.reducer;
-
-// 一時的にany
-export const selectUserName = (state: any): void => state.user.name;
-export const selectUserEmail = (state: any): void => state.user.email;
-export const selectUserPhoto = (state: any): void => state.user.photo;
+export const selectUserName = (state: RootState): string | null => state.user.name;
+export const selectUserEmail = (state: RootState): string | null => state.user.email;
+export const selectUserPhoto = (state: RootState): string | null => state.user.photo;
 
