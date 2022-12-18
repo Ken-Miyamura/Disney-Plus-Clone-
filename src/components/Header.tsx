@@ -86,7 +86,7 @@ const Header = () => {
               </a>
             </NavMenu> 
             <SignOut>
-              <UserImg src={userPhoto!} alt={username} />
+              <UserImg src={userPhoto} alt={username} />
               <DropDown>
                 <span onClick={signout} >ログアウト</span>
               </DropDown>

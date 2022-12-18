@@ -1,44 +1,44 @@
 import { createSlice, PayloadAction, Slice } from "@reduxjs/toolkit";
 
-interface CounterState {
-  name: string | null,
-  email: string | null,
-  photo: string | null
+interface UserState {
+  name: string;
+  email: string;
+  photo: string;
 }
 
 interface RootState {
-  user: CounterState;
+  user: UserState;
 }
 
-const initialState: CounterState = {
+const initialState: UserState = {
   name: '',
   email: '',
   photo: ''
 };
 
 // Sliceとは、reducerとactionを組み合わせたもの
-const userSlice: Slice<CounterState> = createSlice({
+const userSlice: Slice<UserState> = createSlice({
   name: 'user',
   initialState,
   // reducer + action
   reducers: {
-    setUsersLoginDetails: (state: CounterState, action: PayloadAction<CounterState>) => {
+    setUsersLoginDetails: (state: UserState, action: PayloadAction<UserState>) => {
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.photo = action.payload.photo;
     },
 
-    setSignOutState: (state: CounterState) => {
-      state.name = null;
-      state.email = null;
-      state.photo = null;
+    setSignOutState: (state: UserState) => {
+      state.name = "";
+      state.email = "";
+      state.photo = "";
     },
   },
 });
 
 export const { setUsersLoginDetails, setSignOutState } = userSlice.actions;
 export default userSlice.reducer;
-export const selectUserName = (state: RootState): string | null => state.user.name;
-export const selectUserEmail = (state: RootState): string | null => state.user.email;
-export const selectUserPhoto = (state: RootState): string | null => state.user.photo;
+export const selectUserName = (state: RootState): string => state.user.name;
+export const selectUserEmail = (state: RootState): string => state.user.email;
+export const selectUserPhoto = (state: RootState): string => state.user.photo;
 
