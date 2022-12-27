@@ -20,7 +20,7 @@ const initialState: UserState = {
 const userSlice: Slice<UserState> = createSlice({
   name: 'user',
   initialState,
-  // reducer + action
+  // reducer作成と同時に同名でActionCreaterも生成される
   reducers: {
     setUsersLoginDetails: (state: UserState, action: PayloadAction<UserState>) => {
       state.name = action.payload.name;

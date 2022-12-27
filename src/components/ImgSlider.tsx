@@ -37,7 +37,7 @@ const ImgSlider = (props: Props) => {
         props.movies.map(movie => (
           <Wrap key={movie.id}>
             <Link to={`/detail/${movie.id}`}>
-              <img src='/images/slider-scale.jpg' alt={movie.title} width="1440" height="368"/>
+              <img src={movie.backgroundImg} alt={movie.title} width="1440" height="368"/>
             </Link>
           </Wrap>
         ))

@@ -1,6 +1,6 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, Auth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, collection, getDocs, Firestore, initializeFirestore } from 'firebase/firestore';
+import { getAuth, Auth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from "firebase/storage";
 
 type FirebaseConfig = {
