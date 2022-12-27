@@ -18,7 +18,7 @@ const Movies = (props: Props) => {
           props.movies.map((movie) => (
             <Wrap key={movie.id}>
               <Link to={`/detail/${movie.id}`} >
-                <img src={movie.cardImg} alt={movie.title} />
+                <img src={movie.cardImg} alt={movie.title} width="400" height="225" loading='lazy'/>
               </Link>
             </Wrap>
           ))

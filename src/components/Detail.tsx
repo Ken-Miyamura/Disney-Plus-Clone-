@@ -1,37 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import db from '../firebase';
+import { collection, doc, getDoc, DocumentReference, DocumentData, CollectionReference, DocumentSnapshot } from "firebase/firestore";
+import { MovieData } from '../interface/MovieInterface';
 
 const Detail = () => {
+  // useParamsで、親（App.tsx）から全てのパラメーターを継承
+  const { id } = useParams<{ id: string }>();
+  // ここのmovieDataを他ページで再利用しないため、reduxで状態管理はせずにuseStateで状態管理を行う。DocumentDataをMovieDataにするとエラーするので、一時的にanyで対応
+  const [movie, setMovie] = useState<any>();
+
+  useEffect(() => {
+    const moviesCollectionRef: CollectionReference<DocumentData> = collection(db, 'movies');
+    const moviesDocRef: DocumentReference<DocumentData> = doc(moviesCollectionRef, id);
+    getDoc(moviesDocRef).then((doc: DocumentSnapshot<DocumentData>) => {
+      if (doc.exists()) {
+        setMovie(doc.data());
+      }
+    }).catch((err) => {
+      console.error(err);
+      alert('映画データの取得に失敗しました');
+    })
+  }, [id]);
+
   return (
     <Container>
-      <Background>
-        <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4F39B7E16726ECF419DD7C49E011DD95099AA20A962B0B10AA1881A70661CE45/scale?width=1440&aspectRatio=1.78&format=jpeg" alt="映画画像" />
-      </Background>
-      <ImageTitle>
-        <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D7AEE1F05D10FC37C873176AAA26F777FC1B71E7A6563F36C6B1B497CAB1CEC2/scale?width=1440&aspectRatio=1.78" alt="映画タイトル" />
-      </ImageTitle>
-      <Controls>
-        <PlayButton>
-          <img src="/images/play-icon-black.png" />
-          <span>PLAY</span>
-        </PlayButton>
-        <TrailerButton>
-          <img src="/images/play-icon-white.png" />
-          <span>Trailer</span>
-        </TrailerButton>
-        <AddButton>
-          <span>+</span>
-        </AddButton>
-        <GroupWatchButton>
-          <img src="/images/group-icon.png" />
-        </GroupWatchButton>
-      </Controls>
-      <SubTitle>
-          2018 • 7m • Family, Fantasy, Kids, Animation
-      </SubTitle>
-      <Description>
-          A Chinese mom who’s sad when her grown son leaves home gets another chance at motherhood when one of her dumplings springs to life. But she finds that nothing stays cute and small forever.
-      </Description>
+      {movie && (
+        <>
+          <Background>
+            <img src={movie.backgroundImg} alt="映画画像" width="1440" height="810" />
+          </Background>
+          <ImageTitle>
+            <img src={movie.titleImg} alt="映画タイトル" width="1344" height="756" />
+          </ImageTitle>
+          <Controls>
+            <PlayButton>
+              <img src="/images/play-icon-black.png" width="36" height="36" />
+              <span>PLAY</span>
+            </PlayButton>
+            <TrailerButton>
+              <img src="/images/play-icon-white.png" width="36" height="36" />
+              <span>Trailer</span>
+            </TrailerButton>
+            <AddButton>
+              <span>+</span>
+            </AddButton>
+            <GroupWatchButton>
+              <img src="/images/group-icon.png" width="36" height="36" />
+            </GroupWatchButton>
+          </Controls>
+          <SubTitle>
+              {movie.subTitle}
+          </SubTitle>
+          <Description>
+              {movie.description}
+          </Description>
+        </>
+      )}
     </Container>
   )
 }

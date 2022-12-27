@@ -4,14 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { auth, provider } from '../firebase';
 import { selectUserName, selectUserPhoto, setSignOutState, setUsersLoginDetails } from '../reducks/user/userSlice';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavigateFunction } from "react-router-dom";
+import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 
 const Header = () => {
 
-  const dispatch = useDispatch();
-  const navigation = useNavigate();
-  const username = useSelector(selectUserName);
-  const userPhoto = useSelector(selectUserPhoto);
+  const dispatch: Dispatch<AnyAction> = useDispatch();
+  const navigation: NavigateFunction = useNavigate();
+  const username: string = useSelector(selectUserName);
+  const userPhoto: string = useSelector(selectUserPhoto);
 
   useEffect(() => {
     auth.onAuthStateChanged((user: User | null) => {
@@ -51,7 +52,7 @@ const Header = () => {
 
   return (
     <Nav>
-      <Logo src="/images/logo.svg" alt="メインロゴ" />
+      <Logo src="/images/logo.svg" alt="メインロゴ" width="276" height="150" />
       {
         !username ? (
           <LoginContainer>
@@ -60,28 +61,28 @@ const Header = () => {
         ) : (
           <>
             <NavMenu>
-              <a href="">
-                <img src="/images/home-icon.svg" alt="ホームアイコン" />
+              <a>
+                <img src="/images/home-icon.svg" alt="ホームアイコン" width="20" height="20" />
                 <span>ホーム</span>
               </a>
-              <a href="">
-                <img src="images/search-icon.svg" alt="検索アイコン" />
+              <a>
+                <img src="images/search-icon.svg" alt="検索アイコン" width="20" height="20" />
                 <span>検索</span>
               </a>
-              <a href="">
-                <img src="images/watchlist-icon.svg" alt="お気に入りアイコン" />
+              <a>
+                <img src="images/watchlist-icon.svg" alt="お気に入りアイコン" width="20" height="20" />
                 <span>お気に入り</span>
               </a>
-              <a href="">
-                <img src="images/original-icon.svg" alt="オリジナルアイコン" />
+              <a>
+                <img src="images/original-icon.svg" alt="オリジナルアイコン" width="20" height="20" />
                 <span>オリジナル</span>
               </a>
-              <a href="">
-                <img src="images/movie-icon.svg" alt="映画アイコン" />
+              <a>
+                <img src="images/movie-icon.svg" alt="映画アイコン" width="20" height="20" />
                 <span>映画</span>
               </a>
-              <a href="">
-                <img src="images/series-icon.svg" alt="シリーズアイコン" />
+              <a>
+                <img src="images/series-icon.svg" alt="シリーズアイコン" width="20" height="20" />
                 <span>シリーズ</span>
               </a>
             </NavMenu> 
@@ -147,6 +148,7 @@ const NavMenu = styled.div`
     display: flex;
     align-items: center;
     padding: 0 12px;
+    cursor: pointer;
 
     img {
       height: 20px;

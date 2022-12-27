@@ -4,10 +4,25 @@ import Slider from 'react-slick';
 // css ファイルをインポート
 import "slick-carousel/slick/slick.css" ; 
 import "slick-carousel/slick/slick-theme.css";
+import { MovieData } from '../interface/MovieInterface';
+import { Link } from 'react-router-dom';
 
-const ImgSlider = () => {
+type Props = {
+  movies: MovieData[];
+};
 
-  const settings = {
+interface ReactSlickSetting {
+  dots: boolean;
+  infinite: boolean;
+  speed: number;
+  slidesToShow: number;
+  slidesToScroll: number;
+  autoplay: boolean;
+};
+
+const ImgSlider = (props: Props) => {
+
+  const settings: ReactSlickSetting = {
     dots: true,
     infinite: true,
     speed: 500,
@@ -15,28 +30,18 @@ const ImgSlider = () => {
     slidesToScroll: 1,
     autoplay: true,
   }
+
   return (
     <Carousel {...settings}>
-    <Wrap>
-      <a href="#">
-        <img src="images/slider-badag.jpg" alt="スライダー" />
-      </a>
-    </Wrap>
-    <Wrap>
-      <a href="#">
-        <img src="images/slider-badging.jpg" alt="スライダー" />
-      </a>
-    </Wrap>
-    <Wrap>
-      <a href="#">
-        <img src="images/slider-scale.jpg" alt="スライダー" />
-      </a>
-    </Wrap>
-    <Wrap>
-      <a href="#">
-        <img src="images/slider-scales.jpg" alt="スライダー" />
-      </a>
-    </Wrap>
+      { props.movies &&
+        props.movies.map(movie => (
+          <Wrap key={movie.id}>
+            <Link to={`/detail/${movie.id}`}>
+              <img src='/images/slider-scale.jpg' alt={movie.title} width="1440" height="368"/>
+            </Link>
+          </Wrap>
+        ))
+      }
     </Carousel>
   )
 }
@@ -95,10 +100,10 @@ const Wrap = styled.div`
     display: block;
     position: relative;
     padding: 4px;
+    overflow: hidden;
 
     img {
-      width: 100%;
-      height: 100%;
+      object-fit: cover;
     }
 
     &:hover {

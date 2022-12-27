@@ -10,11 +10,12 @@ import { selectUserName } from '../reducks/user/userSlice';
 import { setMovies } from '../reducks/movie/movieSlice';
 import { selectNewDisney, selectOriginal, selectRecommend, selectTrending } from '../reducks/movie/movieSlice';
 import { MovieData } from '../interface/MovieInterface';
+import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 
 const Home = () => {
 
-  const dispatch = useDispatch();
-  const username = useSelector(selectUserName);
+  const dispatch: Dispatch<AnyAction> = useDispatch();
+  const username: string = useSelector(selectUserName);
   // useSelectorはstoreの中のstateの状態を取得できる
   const recommend: MovieData[] = useSelector(selectRecommend);
   const newDisney: MovieData[] = useSelector(selectNewDisney);
@@ -30,7 +31,6 @@ const Home = () => {
     
     getDocs(moviesCollectionRef).then((snapshot: QuerySnapshot<DocumentData>) => {
       snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
-        console.log(doc);
         switch (doc.data().type) {
           case "recommend":
             recommends = [...recommends, { id: doc.id, ...doc.data() }];
@@ -46,11 +46,10 @@ const Home = () => {
 
           case "trending":
             trendings = [...trendings, { id: doc.id, ...doc.data() }];
-            console.log(trendings);
             break;
         }
       });
-
+      // useDispatchでactionをStoreに発送する
       dispatch(setMovies({
         recommend: recommends,
         newDisney: newDisneys,
@@ -65,7 +64,7 @@ const Home = () => {
 
   return (
     <Container>
-      <ImgSlider />
+      <ImgSlider movies={original} />
       <Viewer />
       <Movies title="あなたへのおすすめ" movies={recommend} />
       <Movies title="新作" movies={newDisney} />
